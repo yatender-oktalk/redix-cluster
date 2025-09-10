@@ -67,8 +67,8 @@ defmodule RedixCluster.Run do
 
       [tohash_key] ->
         tohash_key
-        |> String.strip(?{)
-        |> String.strip(?})
+        |> String.trim_leading("{")
+        |> String.trim_trailing("}")
         |> RedixCluster.Hash.hash()
     end
   end

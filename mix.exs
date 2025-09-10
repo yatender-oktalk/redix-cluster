@@ -33,13 +33,13 @@ defmodule RedixCluster.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [ 
-      {:redix, "~> 1.3"},
+      {:redix, "~> 1.0"},
       {:poolboy, "~> 1.5"},
-      {:crc, "~> 0.10"},
+      {:crc, "~> 0.9"},
       # Development and test dependencies
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.30", only: :dev, runtime: false}, 
-      {:espec, "~> 1.10", only: :test},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.25", only: :dev, runtime: false}, 
+      {:espec, "~> 1.8", only: :test},
       # Benchmark dependencies
       {:benchfella, github: "alco/benchfella", only: :bench},
       {:eredis_cluster, github: "adrienmo/eredis_cluster", only: :bench}

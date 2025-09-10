@@ -1,6 +1,13 @@
 # RedixCluster
 
-**a wrapper for redix to support cluster mode of redis 
+**A wrapper for redix to support cluster mode of redis**
+
+> **Note:** This library has been updated to support modern Elixir versions (1.12+) with updated dependencies and modernized configuration syntax.
+
+## Requirements
+
+- Elixir 1.12+
+- Erlang/OTP 23+
 
 ## Installation
 
@@ -14,7 +21,7 @@
   2. Ensure redix_cluster is started before your application:
      ```elixir
         def application do
-          [applications: [:redix_cluster]]
+          [extra_applications: [:redix_cluster]]
         end
      ```
         
@@ -28,6 +35,8 @@
 
 ## Config
      ```elixir
+        import Config
+        
         config :redix_cluster,
           cluster_nodes: [%{host: "127.0.0.1", port: 7000},
                           %{host: "127.0.0.1", port: 7001},
