@@ -1,25 +1,27 @@
 defmodule RedixCluster.Supervisor do
   @moduledoc false
 
-  import Supervisor.Spec
+  use Supervisor
 
   @spec start_link() :: Supervisor.on_start()
   def start_link() do
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+  end
+
+  def init([]) do
     children = [
-      supervisor(RedixCluster.Pools.Supervisor, [[name: RedixCluster.Pools.Supervisor]],
-        modules: :dynamic
-      ),
-      worker(RedixCluster.Monitor, [[name: RedixCluster.Monitor]], modules: :dynamic)
+      {RedixCluster.Pools.Supervisor, [name: RedixCluster.Pools.Supervisor]},
+      {RedixCluster.Monitor, [name: RedixCluster.Monitor]}
     ]
 
     slot_cache_num = RedixCluster.SlotCache.process_num()
 
-    slot_cache_worker =
+    slot_cache_children =
       Enum.map(1..slot_cache_num, fn x ->
         name = RedixCluster.SlotCache.process_name(x)
-        worker(RedixCluster.SlotCache, [name], id: name)
+        Supervisor.child_spec({RedixCluster.SlotCache, name}, id: name)
       end)
 
-    Supervisor.start_link(children ++ slot_cache_worker, strategy: :one_for_one, name: __MODULE__)
+    Supervisor.init(children ++ slot_cache_children, strategy: :one_for_one)
   end
 end

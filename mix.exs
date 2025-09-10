@@ -4,9 +4,8 @@ defmodule RedixCluster.Mixfile do
   def project do
     [app: :redix_cluster,
      version: "0.0.2",
-     elixir: "~> 1.6",
-     build_embedded: Mix.env in [:prod],
-     start_permanent: Mix.env == :prod,
+     elixir: "~> 1.12",
+     start_permanent: Mix.env() == :prod,
      preferred_cli_env: [espec: :test],
      deps: deps(),
      description: description(), 
@@ -17,9 +16,10 @@ defmodule RedixCluster.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [mod: {RedixCluster, []},
-    included_applications: [:crc],
-    applications: [:logger, :redix]]
+    [
+      mod: {RedixCluster, []},
+      extra_applications: [:logger, :ssl, :crypto]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -32,15 +32,17 @@ defmodule RedixCluster.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [ {:redix, "~> 0.9.3"},
+    [ 
+      {:redix, "~> 1.0"},
       {:poolboy, "~> 1.5"},
-      {:dialyze, "~> 0.2", only: :dev},
-      {:dogma, "~> 0.0", only: :dev},
-      {:crc, "~> 0.5"},
+      {:crc, "~> 0.9"},
+      # Development and test dependencies
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.25", only: :dev, runtime: false}, 
+      {:espec, "~> 1.8", only: :test},
+      # Benchmark dependencies
       {:benchfella, github: "alco/benchfella", only: :bench},
-      {:eredis_cluster, github: "adrienmo/eredis_cluster", only: :bench},
-      {:espec, "~> 1.7", only: :test},
-      {:ex_doc, "~> 0.19", only: :dev}, 
+      {:eredis_cluster, github: "adrienmo/eredis_cluster", only: :bench}
     ]
   end
 
